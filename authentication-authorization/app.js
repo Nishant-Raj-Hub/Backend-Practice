@@ -6,7 +6,6 @@ const userModel = require('./models/user');
 
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const user = require('./models/user');
 
 //to set ejs as view engine
 app.set("view engine", "ejs");
@@ -24,13 +23,13 @@ app.get("/", (req, res)=>{
     res.render("index");
 })
 
-app.post("/create",  (req, res)=>{
+app.post("/create", async (req, res)=>{
     const {username, email, password, age } = req.body;
 
-    // const userExist = await user.findOne({email});
-    // if(userExist){
-    //     res.status(400).json({message: "user already exisittt!"})
-    // }
+    const userExist = await userModel.findOne({email});
+    if(userExist){
+        res.status(400).json({message: "something went wronggg!"})
+    }
 
     bcrypt.genSalt(10, (err, salt)=>{
         bcrypt.hash(password, salt, async (err, hash)=>{
